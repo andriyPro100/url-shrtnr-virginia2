@@ -1,6 +1,7 @@
 package edu.kpi.testcourse.storage;
 
 import edu.kpi.testcourse.entities.UrlAlias;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.annotation.Nullable;
@@ -32,8 +33,16 @@ public class UrlRepositoryFakeImpl implements UrlRepository {
   }
 
   @Override
-  public List<UrlAlias> getAllAliasesForUser(String userEmail) {
-    // TODO: We should implement it
-    throw new UnsupportedOperationException();
+  public List<UrlAlias> getAllAliases(String username) {
+    List<UrlAlias> aliasesList = new ArrayList<>();
+    for (UrlAlias urlAlias: aliases.values()) {
+      if (urlAlias.email().equals(username)) {
+        aliasesList.add(urlAlias);
+      }
+      else {
+        throw new PermissionDenied();
+      }
+    }
+    return aliasesList;
   }
 }
