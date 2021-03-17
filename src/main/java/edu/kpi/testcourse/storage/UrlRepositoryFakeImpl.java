@@ -35,7 +35,7 @@ public class UrlRepositoryFakeImpl implements UrlRepository {
   @Override
   public List<UrlAlias> getAllAliases(String username) {
     List<UrlAlias> aliasesList = new ArrayList<>();
-    for (UrlAlias urlAlias: aliases.values()) {
+    for (UrlAlias urlAlias : aliases.values()) {
       if (urlAlias.email().equals(username)) {
         aliasesList.add(urlAlias);
       }
