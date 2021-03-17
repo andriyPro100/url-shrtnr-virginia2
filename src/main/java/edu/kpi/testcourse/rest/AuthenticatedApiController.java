@@ -13,6 +13,7 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.server.util.HttpHostResolver;
 import io.micronaut.security.annotation.Secured;
@@ -69,6 +70,26 @@ public class AuthenticatedApiController {
       return HttpResponse.serverError(
         json.toJson(new ErrorResponse(1, "Alias is already taken"))
       );
+    }
+  }
+
+  /**
+   * Deletes specified alias, created by current user.
+   *
+   * @param alias to be deleted
+   * @return 200 (Ok) status code. In case of error could return status code
+   *  <p>400 (Bad request) if {@code alias} doesn't exist or wasn't created by current user</p>
+   */
+  @Secured(SecurityRule.IS_AUTHENTICATED)
+  @Delete(value = "/urls/delete/{alias}", produces = MediaType.TEXT_PLAIN)
+  public HttpResponse<String> deleteAlias(Principal principal, String alias) {
+    var username = principal.getName();
+    String t = alias.replaceAll("[\r\n]+", "");
+    if (logic.deleteAlias(t, username)) {
+      return HttpResponse.ok("Alias was successfully deleted.");
+    } else {
+      return HttpResponse.badRequest(
+        String.format("Alias %s doesn't exist or wasn't created by current user.", alias));
     }
   }
 }
