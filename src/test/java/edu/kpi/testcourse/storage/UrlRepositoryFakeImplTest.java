@@ -5,6 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 import edu.kpi.testcourse.entities.UrlAlias;
+import edu.kpi.testcourse.storage.UrlRepository.PermissionDenied;
 import org.junit.jupiter.api.Test;
 
 class UrlRepositoryFakeImplTest {
@@ -38,5 +39,22 @@ class UrlRepositoryFakeImplTest {
     }).isInstanceOf(UrlRepository.AliasAlreadyExist.class);
   }
 
+  @Test
+  void shouldGetAllAliases() {
+    //GIVEN
+    UrlRepository repo = new UrlRepositoryFakeImpl();
+
+    //WHEN
+    UrlAlias testAlias = new UrlAlias("test", "http://localhost:8080/", "artem@gmail.com");
+    UrlAlias testAlias2 = new UrlAlias("lol", "http://localhost:8080/", "artem@gmail.com");
+    UrlAlias testAlias3 = new UrlAlias("shorten", "http://localhost:8080/", "lol@gmail.com");
+
+    repo.createUrlAlias(testAlias);
+    repo.createUrlAlias(testAlias2);
+
+    //THEN
+    assertFalse(repo.getAllAliases(testAlias.email()).isEmpty());
+    assertThrows(PermissionDenied.class, ()->{repo.getAllAliases(testAlias3.email());});
+  }
 
 }
