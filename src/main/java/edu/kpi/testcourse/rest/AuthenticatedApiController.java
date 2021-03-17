@@ -77,8 +77,7 @@ public class AuthenticatedApiController {
    * Deletes specified alias, created by current user.
    *
    * @param alias to be deleted
-   * @return 200 (Ok) status code. In case of error could return status code
-   *  <p>400 (Bad request) if {@code alias} doesn't exist or wasn't created by current user</p>
+   * @return 200 (Ok) status code. In case of error could return status code. 400 (Bad request)
    */
   @Secured(SecurityRule.IS_AUTHENTICATED)
   @Delete(value = "/urls/delete/{alias}", produces = MediaType.TEXT_PLAIN)
