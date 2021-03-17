@@ -38,8 +38,7 @@ public class UrlRepositoryFakeImpl implements UrlRepository {
     for (UrlAlias urlAlias : aliases.values()) {
       if (urlAlias.email().equals(username)) {
         aliasesList.add(urlAlias);
-      }
-      else {
+      } else {
         throw new PermissionDenied();
       }
     }
