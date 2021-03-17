@@ -77,17 +77,19 @@ public class AuthenticatedApiController {
     }
   }
 
+  /**
+   * Show all URL aliases for certain user.
+   */
   @Get(value = "/urls/showAllAliases", processes = MediaType.APPLICATION_JSON)
   public HttpResponse<String> getAll(
-    @Body UrlShortenRequest request,
-    Principal principal,
-    HttpRequest<?> httpRequest,
-    Logic logic) throws UrlRepository.PermissionDenied {
+      @Body UrlShortenRequest request,
+      Principal principal,
+      HttpRequest<?> httpRequest,
+      Logic logic) throws UrlRepository.PermissionDenied {
     try {
       List<UrlAlias> aliasList = logic.getAllAliases(principal.getName());
       return HttpResponse.created(json.toJson(aliasList));
-    }
-    catch (PermissionDenied e) {
+    } catch (PermissionDenied e) {
       return HttpResponse.serverError(
         json.toJson(new ErrorResponse(1, "User is not authorized"))
       );
