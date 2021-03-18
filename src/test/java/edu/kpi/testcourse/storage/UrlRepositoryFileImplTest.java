@@ -96,5 +96,32 @@ public class UrlRepositoryFileImplTest {
     List<UrlAlias> urls = urlRepository.getAllAliasesForUser("random@user.com");
     assertThat(urls).asList().isEmpty();
   }
+
+  @Test
+  void shouldDeleteUrl() {
+    UrlAlias url = new UrlAlias("Test", "http://www.nomber.com", "random@user.com");
+    urlRepository.createUrlAlias(url);
+    urlRepository.deleteUrlAlias("random@user.com", "Test");
+    assertThat(urlRepository.findUrlAlias("Test")).isNull();
+    assertThat(urlRepository.getAllAliasesForUser("random@user.com"))
+      .asList()
+      .doesNotContain(url);
+  }
+
+  @Test
+  void shouldThrowRuntimeError_whenNoAliasForDeletion() {
+    String notExistsAlias = "Test";
+    String email = "random@user.com";
+    assertThrows(RuntimeException.class,
+      () -> urlRepository.deleteUrlAlias(email, notExistsAlias));
+  }
+
+  @Test
+  void shouldThrowPermissionDenied_whenAliasDoesNotBelongToUser() {
+    UrlAlias urlAlias = new UrlAlias("Test", "http://gmail.com", "random@user.com");
+    urlRepository.createUrlAlias(urlAlias);
+    assertThrows(UrlRepository.PermissionDenied.class,
+      () -> urlRepository.deleteUrlAlias("best@user.com", "Test"));
+  }
 }
 
