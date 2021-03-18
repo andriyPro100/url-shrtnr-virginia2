@@ -22,6 +22,24 @@ class UrlRepositoryFakeImplTest {
     assertThat(repo.findUrlAlias("http://r.com/short")).isEqualTo(alias);
   }
 
+  /**
+   * Checking the main ability of delete function: TO DELETE!
+   */
+  @Test
+  void shouldDeleteChosenAlias() {
+    //GIVEN
+    UrlRepositoryFakeImpl storage = new UrlRepositoryFakeImpl();
+
+    //WHEN
+    UrlAlias testAlias = new UrlAlias("test", "http://localhost:8080", "test@gmail.com");
+    storage.createUrlAlias(testAlias);
+    storage.deleteUrlAlias(testAlias.email(), testAlias.alias());
+
+    //THEN
+    assertThat(storage.findUrlAlias("test")).isNull();
+  }
+
+
   @Test
   void shouldNotAllowToCreateSameAliases() {
     //GIVEN

@@ -94,6 +94,18 @@ public class Logic {
   }
 
   /**
+   * Delete full URL by alias.
+   *
+   * @param email user email
+   * @param alias a short URL alias
+   * @return a full URL
+   */
+  public boolean deleteAlias(String email, String alias) {
+    urls.deleteUrlAlias(email, alias);
+    return true;
+  }
+
+  /**
    * Error for situation when we are trying to register already registered user.
    */
   public static class UserIsAlreadyCreated extends Throwable {
