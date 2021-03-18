@@ -83,7 +83,7 @@ public class UrlRepositoryFileImpl implements UrlRepository {
   }
 
   private static Map<String, List<UrlAlias>> makeUrlsMapByEmail(
-    Map<String, UrlAlias> urlMapByAlias
+      Map<String, UrlAlias> urlMapByAlias
   ) {
     Map<String, List<UrlAlias>> urlsMapByEmail = new HashMap<>();
 
@@ -94,10 +94,10 @@ public class UrlRepositoryFileImpl implements UrlRepository {
   }
 
   private static void putInMapByEmail(
-    Map<String, List<UrlAlias>> urlsMapByEmail, UrlAlias urlAlias
+      Map<String, List<UrlAlias>> urlsMapByEmail, UrlAlias urlAlias
   ) {
     List<UrlAlias> urlsByEmailList = urlsMapByEmail.computeIfAbsent(urlAlias.email(),
-      s -> new ArrayList<>());
+        s -> new ArrayList<>());
     urlsByEmailList.add(urlAlias);
   }
 
@@ -106,7 +106,7 @@ public class UrlRepositoryFileImpl implements UrlRepository {
   }
 
   private static Map<String, UrlAlias> readUrlsFromJsonDatabaseFile(
-    JsonTool jsonTool, Path sourceFilePath
+      JsonTool jsonTool, Path sourceFilePath
   ) {
     String json;
     try {
