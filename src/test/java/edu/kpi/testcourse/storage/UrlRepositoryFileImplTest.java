@@ -4,7 +4,10 @@ import edu.kpi.testcourse.entities.UrlAlias;
 import edu.kpi.testcourse.logic.UrlShortenerConfig;
 import edu.kpi.testcourse.serialization.JsonToolJacksonImpl;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,4 +45,19 @@ public class UrlRepositoryFileImplTest {
     urlRepository.createUrlAlias(url);
     assertThat(urlRepository.findUrlAlias("Test")).isEqualTo(url);
   }
+
+  @Test
+  void serializesOneUrl() throws IOException {
+    String alias = "Test";
+    String email = "happy@zucchini.com";
+    String destinationUrl = "http://www.piterpumpkineater1.com";
+    UrlAlias url = new UrlAlias(alias, destinationUrl, email);
+    urlRepository.createUrlAlias(url);
+    Assertions.assertThat(
+      Files.readString(appConfig.storageRoot()
+        .resolve("url-repository.json"), StandardCharsets.UTF_8)
+    ).contains(alias, email, destinationUrl);
+  }
+
 }
+
