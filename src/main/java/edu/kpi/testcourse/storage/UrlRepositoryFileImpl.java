@@ -30,6 +30,9 @@ public class UrlRepositoryFileImpl implements UrlRepository {
   @Inject
   public UrlRepositoryFileImpl(JsonTool jsonTool, UrlShortenerConfig appConfig) {
     this.jsonTool = jsonTool;
+    this.jsonFilePath = makeJsonFilePath(appConfig.storageRoot());
+    urlMapByAlias = null;
+    urlsMapByEmail = null;
   }
 
   @Override
@@ -90,6 +93,11 @@ public class UrlRepositoryFileImpl implements UrlRepository {
       s -> new ArrayList<>());
     urlsByEmailList.add(urlAlias);
   }
+
+  private static Path makeJsonFilePath(Path storageRoot) {
+    return storageRoot.resolve("url-repository.json");
+  }
+
 
 
 
