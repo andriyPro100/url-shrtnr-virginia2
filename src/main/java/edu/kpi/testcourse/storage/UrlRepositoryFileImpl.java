@@ -39,6 +39,7 @@ public class UrlRepositoryFileImpl implements UrlRepository {
     }
 
     urlMapByAlias.put(urlAlias.alias(), urlAlias);
+    putInMapByEmail(urlsMapByEmail, urlAlias);
 
   }
 
@@ -77,8 +78,19 @@ public class UrlRepositoryFileImpl implements UrlRepository {
     Map<String, List<UrlAlias>> urlsMapByEmail = new HashMap<>();
 
     for (UrlAlias urlAlias : urlMapByAlias.values()) {
-      //todo
+      putInMapByEmail(urlsMapByEmail, urlAlias);
     }
     return urlsMapByEmail;
   }
+
+  private static void putInMapByEmail(
+    Map<String, List<UrlAlias>> urlsMapByEmail, UrlAlias urlAlias
+  ) {
+    List<UrlAlias> urlsByEmailList = urlsMapByEmail.computeIfAbsent(urlAlias.email(),
+      s -> new ArrayList<>());
+    urlsByEmailList.add(urlAlias);
+  }
+
+
+
 }
