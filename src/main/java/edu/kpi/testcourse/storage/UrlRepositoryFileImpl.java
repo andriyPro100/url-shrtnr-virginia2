@@ -86,8 +86,7 @@ public class UrlRepositoryFileImpl implements UrlRepository {
   /**
    * Get all aliases, created by current user.
    *
-   * @param alias to be deleted
-   * @param useremail user email
+   * @param userEmail user email
    */
   @Override
   public synchronized List<UrlAlias> getAllAliasesForUser(String userEmail) {
