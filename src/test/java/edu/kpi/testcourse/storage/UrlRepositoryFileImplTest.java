@@ -12,6 +12,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class UrlRepositoryFileImplTest {
   UrlShortenerConfig appConfig;
@@ -59,5 +60,17 @@ public class UrlRepositoryFileImplTest {
     ).contains(alias, email, destinationUrl);
   }
 
+  @Test
+  void shouldThrowError_whenAliasAlreadyExists() {
+    UrlAlias urlAlias = new UrlAlias("Test", "http://www.piterpumpkineater2.com", "happy@zucchini.com");
+    urlRepository.createUrlAlias(urlAlias);
+    assertThrows(UrlRepository.AliasAlreadyExist.class, () -> urlRepository.createUrlAlias(urlAlias));
+  }
+
+  @Test
+  void shouldFindNull_whenRepositoryIsEmpty() {
+    String notExistsAlias = "Test";
+    assertThat(urlRepository.findUrlAlias(notExistsAlias)).isNull();
+  }
 }
 
