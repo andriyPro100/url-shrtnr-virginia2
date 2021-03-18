@@ -82,7 +82,13 @@ public class UrlRepositoryFileImpl implements UrlRepository {
 
     syncUrlsWithJsonDatabaseFile();
   }
-
+  
+  /**
+   * Get all aliases, created by current user.
+   *
+   * @param alias to be deleted
+   * @param useremail user email
+   */
   @Override
   public synchronized List<UrlAlias> getAllAliasesForUser(String userEmail) {
     return urlsMapByEmail.getOrDefault(userEmail, new ArrayList<>());
