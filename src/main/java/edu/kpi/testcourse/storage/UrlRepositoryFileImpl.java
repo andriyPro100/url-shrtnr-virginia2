@@ -37,7 +37,7 @@ public class UrlRepositoryFileImpl implements UrlRepository {
     this.jsonTool = jsonTool;
     this.jsonFilePath = makeJsonFilePath(appConfig.storageRoot());
     this.urlMapByAlias = readUrlsFromJsonDatabaseFile(jsonTool, this.jsonFilePath);
-    urlsMapByEmail = null;
+    this.urlsMapByEmail = makeUrlsMapByEmail(urlMapByAlias);
   }
 
   @Override
@@ -49,6 +49,7 @@ public class UrlRepositoryFileImpl implements UrlRepository {
     urlMapByAlias.put(urlAlias.alias(), urlAlias);
     putInMapByEmail(urlsMapByEmail, urlAlias);
 
+    syncUrlsWithJsonDatabaseFile();
   }
 
   @Nullable
@@ -73,6 +74,7 @@ public class UrlRepositoryFileImpl implements UrlRepository {
     List<UrlAlias> userUrls = urlsMapByEmail.get(email);
     userUrls.remove(urlAlias);
 
+    syncUrlsWithJsonDatabaseFile();
   }
 
   @Override
@@ -120,7 +122,12 @@ public class UrlRepositoryFileImpl implements UrlRepository {
     return result;
   }
 
-
-
-
+  private void syncUrlsWithJsonDatabaseFile() {
+    String json = jsonTool.toJson(urlMapByAlias);
+    try {
+      Files.writeString(jsonFilePath, json);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
 }
