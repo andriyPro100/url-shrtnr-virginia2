@@ -89,5 +89,12 @@ public class UrlRepositoryFileImplTest {
     assertThat(urls).asList().contains(URL11, URL22, URL33);
   }
 
+  @Test
+  void shouldEmptyListAliasesForUser() {
+    UrlAlias url = new UrlAlias("Test", "http://www.nomber.com", "isnthappy@pickles.com");
+    urlRepository.createUrlAlias(url);
+    List<UrlAlias> urls = urlRepository.getAllAliasesForUser("random@user.com");
+    assertThat(urls).asList().isEmpty();
+  }
 }
 
