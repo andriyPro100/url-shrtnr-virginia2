@@ -57,7 +57,13 @@ public class UrlRepositoryFileImpl implements UrlRepository {
   public synchronized UrlAlias findUrlAlias(String alias) {
     return urlMapByAlias.get(alias);
   }
-
+  
+  /**
+   * Deletes specified alias, created by current user.
+   *
+   * @param alias to be deleted
+   * @param email useremail
+   */
   @Override
   public void deleteUrlAlias(String email, String alias) throws PermissionDenied {
     UrlAlias urlAlias = urlMapByAlias.get(alias);
