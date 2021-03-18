@@ -6,6 +6,7 @@ import edu.kpi.testcourse.serialization.JsonToolJacksonImpl;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -72,5 +73,21 @@ public class UrlRepositoryFileImplTest {
     String notExistsAlias = "Test";
     assertThat(urlRepository.findUrlAlias(notExistsAlias)).isNull();
   }
+
+  @Test
+  void shouldGetAllAliasesForUser() {
+    UrlAlias URL11 = new UrlAlias("Test1", "http://www.first.com", "happy@pickles.com");
+    UrlAlias URL22 = new UrlAlias("Test2", "http://www.second.com", "happy@pickles.com");
+    UrlAlias URL33 = new UrlAlias("Test3", "http://www.third.com", "happy@pickles.com");
+    UrlAlias URL44 = new UrlAlias("Test4", "http://www.fourth.com", "isnthappy@pickles.com");
+    urlRepository.createUrlAlias(URL11);
+    urlRepository.createUrlAlias(URL22);
+    urlRepository.createUrlAlias(URL33);
+    urlRepository.createUrlAlias(URL44);
+    List<UrlAlias> urls = urlRepository.getAllAliasesForUser("happy@pickles.com");
+    assertThat(urls.size()).isEqualTo(3);
+    assertThat(urls).asList().contains(URL11, URL22, URL33);
+  }
+
 }
 
