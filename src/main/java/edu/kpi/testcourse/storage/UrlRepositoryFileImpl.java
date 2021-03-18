@@ -1,8 +1,13 @@
 package edu.kpi.testcourse.storage;
 
+import com.google.gson.reflect.TypeToken;
 import edu.kpi.testcourse.entities.UrlAlias;
 import edu.kpi.testcourse.logic.UrlShortenerConfig;
 import edu.kpi.testcourse.serialization.JsonTool;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +36,7 @@ public class UrlRepositoryFileImpl implements UrlRepository {
   public UrlRepositoryFileImpl(JsonTool jsonTool, UrlShortenerConfig appConfig) {
     this.jsonTool = jsonTool;
     this.jsonFilePath = makeJsonFilePath(appConfig.storageRoot());
-    urlMapByAlias = null;
+    this.urlMapByAlias = readUrlsFromJsonDatabaseFile(jsonTool, this.jsonFilePath);
     urlsMapByEmail = null;
   }
 
@@ -96,6 +101,23 @@ public class UrlRepositoryFileImpl implements UrlRepository {
 
   private static Path makeJsonFilePath(Path storageRoot) {
     return storageRoot.resolve("url-repository.json");
+  }
+
+  private static Map<String, UrlAlias> readUrlsFromJsonDatabaseFile(
+    JsonTool jsonTool, Path sourceFilePath
+  ) {
+    String json;
+    try {
+      json = Files.readString(sourceFilePath, StandardCharsets.UTF_8);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    Type type = new TypeToken<HashMap<String, UrlAlias>>(){}.getType();
+    Map<String, UrlAlias> result = jsonTool.fromJson(json, type);
+    if (result == null) {
+      throw new RuntimeException("Could not deserialize the aliases repository");
+    }
+    return result;
   }
 
 
