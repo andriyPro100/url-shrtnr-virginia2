@@ -2,22 +2,27 @@ package edu.kpi.testcourse.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.kpi.testcourse.entities.UrlAlias;
 import edu.kpi.testcourse.logic.Logic;
 import edu.kpi.testcourse.rest.models.ErrorResponse;
 import edu.kpi.testcourse.rest.models.UrlShortenRequest;
 import edu.kpi.testcourse.rest.models.UrlShortenResponse;
 import edu.kpi.testcourse.serialization.JsonTool;
+import edu.kpi.testcourse.storage.UrlRepository;
 import edu.kpi.testcourse.storage.UrlRepository.AliasAlreadyExist;
+import edu.kpi.testcourse.storage.UrlRepository.PermissionDenied;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.server.util.HttpHostResolver;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import java.security.Principal;
+import java.util.List;
 import javax.inject.Inject;
 
 /**
@@ -50,7 +55,7 @@ public class AuthenticatedApiController {
   }
 
   /**
-   * Create URL alias.
+   * Create an URL alias.
    */
   @Post(value = "/urls/shorten", processes = MediaType.APPLICATION_JSON)
   public HttpResponse<String> shorten(
@@ -68,6 +73,25 @@ public class AuthenticatedApiController {
     } catch (AliasAlreadyExist e) {
       return HttpResponse.serverError(
         json.toJson(new ErrorResponse(1, "Alias is already taken"))
+      );
+    }
+  }
+
+  /**
+   * Show all URL aliases for a certain user.
+   */
+  @Get(value = "/urls/showAllAliases", processes = MediaType.APPLICATION_JSON)
+  public HttpResponse<String> getAll(
+      @Body UrlShortenRequest request,
+      Principal principal,
+      HttpRequest<?> httpRequest,
+      Logic logic) throws UrlRepository.PermissionDenied {
+    try {
+      List<UrlAlias> aliasList = logic.getAllAliases(principal.getName());
+      return HttpResponse.created(json.toJson(aliasList));
+    } catch (PermissionDenied e) {
+      return HttpResponse.serverError(
+        json.toJson(new ErrorResponse(1, "User is not authorized"))
       );
     }
   }

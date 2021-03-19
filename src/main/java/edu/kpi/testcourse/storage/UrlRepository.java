@@ -32,7 +32,7 @@ public interface UrlRepository {
   /**
    * Finds all URLs that belong to the user with the given email.
    */
-  List<UrlAlias> getAllAliasesForUser(String userEmail);
+  List<UrlAlias> getAllAliases(String username);
 
   /**
    * Error for a case when we try to create a shortened URL that is already exist.
