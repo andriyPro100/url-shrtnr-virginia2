@@ -93,7 +93,9 @@ public class Logic {
 
     return null;
   }
-
+  /**
+   * Get a list of aliases by user's email.
+   */
   public List<UrlAlias> getAllAliases(String username) {
     return urls.getAllAliases(username);
   }
