@@ -3,13 +3,18 @@ package edu.kpi.testcourse.storage;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
-
 import edu.kpi.testcourse.entities.UrlAlias;
 import edu.kpi.testcourse.storage.UrlRepository.PermissionDenied;
 import org.junit.jupiter.api.Test;
 
+/**
+* Class for testing a storage module.
+*/
 class UrlRepositoryFakeImplTest {
 
+  /**
+  * Checking functionality of creating aliases.
+  */
   @Test
   void shouldCreateAlias() {
     //GIVEN
@@ -22,7 +27,10 @@ class UrlRepositoryFakeImplTest {
     //THEN
     assertThat(repo.findUrlAlias("http://r.com/short")).isEqualTo(alias);
   }
-
+  
+  /**
+  * Checking functionality of abillity to not allowing creating the same aliases.
+  */
   @Test
   void shouldNotAllowToCreateSameAliases() {
     //GIVEN
@@ -38,7 +46,10 @@ class UrlRepositoryFakeImplTest {
       repo.createUrlAlias(alias2);
     }).isInstanceOf(UrlRepository.AliasAlreadyExist.class);
   }
-
+  
+  /**
+  * Checking functionality of abillity getting all aliases of a certain user.
+  */
   @Test
   void shouldGetAllAliases() {
     //GIVEN
@@ -56,5 +67,4 @@ class UrlRepositoryFakeImplTest {
     assertFalse(repo.getAllAliases(testAlias.email()).isEmpty());
     assertThrows(PermissionDenied.class, ()->{repo.getAllAliases(testAlias3.email());});
   }
-
 }
