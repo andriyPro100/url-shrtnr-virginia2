@@ -55,7 +55,7 @@ public class AuthenticatedApiController {
   }
 
   /**
-   * Create URL alias.
+   * Create an URL alias.
    */
   @Post(value = "/urls/shorten", processes = MediaType.APPLICATION_JSON)
   public HttpResponse<String> shorten(
@@ -78,7 +78,7 @@ public class AuthenticatedApiController {
   }
 
   /**
-   * Show all URL aliases for certain user.
+   * Show all URL aliases for a certain user.
    */
   @Get(value = "/urls/showAllAliases", processes = MediaType.APPLICATION_JSON)
   public HttpResponse<String> getAll(
